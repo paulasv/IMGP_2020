@@ -30,7 +30,6 @@ name  <- as.character(names$Old[l, drop = TRUE])
 newname  <- names$New[names$Old==name, drop = TRUE]
 
 
-## select a stock
 idx <- which(stock_names == name)
 idxn  <- which(stock_names == newname)
 
