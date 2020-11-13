@@ -28,8 +28,6 @@ The data files are:
   
   * **data_gdy.csv**: Results data on status decomposition.
   
-  * **events.csv**: Result of the list of events of change in reference points.
-  
   * **StockKeyOldNew.csv**: Supporting data of old and new labels of stock keys.
   
   * **labels.csv**: Supporting data of labels for the plot.
