@@ -16,23 +16,23 @@ The scripts for analysis and plots are divided in:
 
 The data files are:
  
-  * **database.csv**: Data on ICES assessments with reference points
+  * **database.csv**: Data on ICES assessments with reference points.
   
-  * **database_diff_F_17April.csv**: Assessment data on changes in FMSY
+  * **database_diff_F_17April.csv**: Assessment data on changes in FMSY.
   
-  * **database_diff_B_17April.csv**: Assessment data on changes in MSYBtrigger
+  * **database_diff_B_17April.csv**: Assessment data on changes in MSYBtrigger.
   
-  * **covariates_F.csv**: Covariates for FMSY
+  * **covariates_F.csv**: Covariates for FMSY.
   
-  * **covariates_B.csv**: Covariates for MSYBtrigger
+  * **covariates_B.csv**: Covariates for MSYBtrigger.
   
-  * **data_gdy.csv**: Results data on status decomposition
+  * **data_gdy.csv**: Results data on status decomposition.
   
-  * **events.csv**: Result of the list of events of change in reference points
+  * **events.csv**: Result of the list of events of change in reference points.
   
-  * **StockKeyOldNew.csv**: Supporting data of old and new labels of stock keys 
+  * **StockKeyOldNew.csv**: Supporting data of old and new labels of stock keys.
   
-  * **labels.csv**: Supporting data of labels for the plot
+  * **labels.csv**: Supporting data of labels for the plot.
   
   
   
