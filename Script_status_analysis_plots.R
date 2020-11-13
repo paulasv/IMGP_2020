@@ -16,7 +16,6 @@ library(stringr)
 library(ggpubr)
 
 
-setwd("~/Documents/GMIT/FishKOSM-GMIT/paula/2. ICES_rp/status/Code")
 
 # # # # # # # # Databases cleaning and filtering # # # # # # # # # # # 
 
