@@ -44,7 +44,7 @@ redondeo.b <-c("her.27.nirs 2018" ,     "hom.27.2a4a5b6a7a-ce-k8 2018" ,"meg.27.
 rts.b <- c( "ple.27.7e 2019" ,  "ple.27.7e 2018" ,  "ple.27.7h-k 2019", "reb.2127.dp 2019", "sol.27.7h-k 2019")
 ## Substitutions
 data_B[data_B$newname.x == "sol.27.7d" & data_B$AssessmentYear.x == 2019, 4] <- 15072 
-ataB[dataB$newname.x == "ple.27.7e" & dataB$AssessmentYear.x == 2015, 4] <- 2400
+data_B[data_B$newname.x == "ple.27.7e" & data_B$AssessmentYear.x == 2015, 4] <- 2400
 
 
 
