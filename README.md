@@ -5,7 +5,7 @@ The scripts for analysis and plots are divided in:
 
  1. **database. R**: Contains the code used to download assessment ICES XML data. 
  
- 2. **database_diff.R**: Contains the code to identify changes in reference points and creates a database for each reference point 
+ 2. **database_diff.R**: Contains the code to identify changes in reference points and create a database for each reference point changes
 
  3. **Script_status_analysis_plots.R**: Contains code for the status analysis, decomposition, and plots creation.  
   
