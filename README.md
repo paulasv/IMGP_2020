@@ -1,4 +1,4 @@
-# IMGP_2020
+# MRPG_2021
 Code and data for analysis to accompany the manuscript "Impacts of moving the goalposts: changes in reference points and implications for fisheries sustainability"
 
 The scripts for analysis and plots are divided in:
@@ -8,10 +8,12 @@ The scripts for analysis and plots are divided in:
  2. **database_diff.R**: Contains the code to identify changes in reference points and create a database for each reference point changes
 
  3. **Script_status_analysis_plots.R**: Contains code for the status analysis, decomposition, and plots creation.  
-  
- 4. **Script_plots_model_FMSY.R**: Code for the model of changes in FMSY and plots. 
  
- 5. **Script_plots_model_MSYBtrigger.R**:  Code for the model of changes in MSYBtrigger and plots. 
+ 4. **Script_MAD_plots.R**: Contains code for the MAD analysis and the creation of plot figure 2. 
+ 
+ 5. **Script_plots_model_FMSY.R**: Code for the model of changes in FMSY and plots. 
+ 
+ 6. **Script_plots_model_MSYBtrigger.R**:  Code for the model of changes in MSYBtrigger and plots. 
  
 
 The data files are:
@@ -27,8 +29,6 @@ The data files are:
   * **covariates_B.csv**: Covariates for MSYBtrigger.
   
   * **data_gdy.csv**: Results data on status decomposition.
-  
-  * **events.csv**: Result of the list of events of change in reference points.
   
   * **StockKeyOldNew.csv**: Supporting data of old and new labels of stock keys.
   
