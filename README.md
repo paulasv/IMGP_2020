@@ -1,4 +1,4 @@
-# IMGP_2020
+# MRPG_2021
 Code and data for analysis to accompany the manuscript "Impacts of moving the goalposts: changes in reference points and implications for fisheries sustainability"
 
 The scripts for analysis and plots are divided in:
