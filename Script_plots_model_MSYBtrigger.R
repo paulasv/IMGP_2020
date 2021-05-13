@@ -17,8 +17,6 @@ library(ggpubr)
 library(reshape2)
 
 
-setwd("~/Documents/GMIT/FishKOSM-GMIT/paula/Impacts_of_moving_goal_posts")
-
 data <- read.csv("data_gdy.csv")
 
 
@@ -99,6 +97,44 @@ for (i in 1: dim(data2)[2]) {
     print(i)
   }}
 
+### Conecting plot 
+mix<-c("ank.27.8c9a 2012", "pra.27.3a4a 2015", "ple.27.7e 2015")
+data <- datab %>%
+  filter(Redondeo != 1,
+         Revision_RP_torelative !=1,
+         RP_relativetotimeseries!=1) %>%
+  filter(!event %in% mix)%>%
+  group_by(Former_MSYBtrigger_)%>%
+  mutate(former = mean(delta_b))%>%
+  ungroup()%>%
+  group_by(Current_MSYBtrigger)%>%
+  mutate(current =mean(delta_b))%>%
+  ungroup()%>%
+  group_by(Former_MSYBtrigger_, Current_MSYBtrigger)%>%
+  summarize(n = n(), 
+            meand = mean(delta_b, na.rm = TRUE), 
+            refy = -mean(former),
+            refx = mean(current))%>%
+  filter(Former_MSYBtrigger_ != 0 )%>%
+  ungroup()%>%
+  mutate(refy = rank(refy))%>%
+  mutate(refx = rank(refx))
+theme_set(theme_minimal())
+
+
+data%>%
+  ggplot(aes(x =1 , xend = 2, y = refy, yend = refx, colour = meand, size =n),show.legend = T)+
+  geom_segment()+
+  geom_point(aes(x =1 , y = refy), size = 12, colour = "papayawhip", alpha = .7)+
+  geom_point(aes(x = 2, y = refx), size = 12, colour = "papayawhip", alpha = .7)+
+  scale_colour_gradient2(low = "#009E73", midpoint = 1,mid =  "lemonchiffon1",  high = "#E69F00" ,limits = c(0, 2) ,  na.value = "#E69F00" )+
+  geom_text(label=data$Former_MSYBtrigger_, x=rep(1, NROW(data)), colour = "black",  check_overlap = F, hjust=1.05, size=2.5)+
+  geom_text(label=data$Current_MSYBtrigger, y = data$refx, x=rep(2, NROW(data)), check_overlap = TRUE,colour = "black", hjust=-0.05, size=2.5)+
+  scale_size(breaks = c(1, 2,4,8))+
+  theme( panel.grid = element_blank(), strip.background.x = element_rect(fill = "white"),axis.text.y=element_blank())+
+  scale_x_continuous(limits=c(0.7,2.2), breaks = c(1,2), labels = c("Previous reference point", "Subsequent reference point"), position = "top")+
+  labs( x = "", y = "", colour = expression(paste("Mean ", delta)), size = "n")
+
 #### Plotting
 names(data3) <- names(data2)
 data3$revision_type <- names(data2)
@@ -167,3 +203,5 @@ mf <- dddd%>%
   theme_classic()+
   coord_flip()
 mf
+
+

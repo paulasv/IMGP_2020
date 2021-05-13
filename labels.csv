@@ -1,93 +1,93 @@
 Ind,Abbreviated name
-1,"CaS,AI black-bellied anglerfish"
-2,"CS,EC,FG blue ling"
-3,"NS,IS,EC,BC,CS seabass"
-4,"NS,IS,EC,BC,CS seabass"
-5,"NS,IS,EC,BC,CS seabass"
-6,wBS cod
-7,wBS cod
-8,wBS cod
-9,wBS cod
-10,eBS cod
-11,"NS,eEC,S cod"
-12,"NS,eEC,S cod"
-13,FP cod
-14,WS cod
-15,WS cod
-16,IS cod
-17,IS cod
-18,IS cod
-19,"eEC,CS cod"
-20,"eEC,CS cod"
-21,NA spurdog
-22,NA spurdog
-23,"NS,WS,S haddock"
-24,"NS,WS,S haddock"
-25,R haddock
-26,R haddock
-27,R haddock
-28,IS haddock
-29,IS haddock
-30,"CS,EC haddock"
-31,"CS,EC haddock"
-32,"NA,AO herring"
-33,"S,K,wBS herring"
-34,"S,K,wBS herring"
-35,cBS herring
-36,cBS herring
-37,GR herring
-38,GB herring
-39,GB herring
-40,"NS,S,K,eEC herring"
-41,"NS,S,K,eEC herring"
-42,"WS,WI herring"
-43,"IS,CS herring"
-44,"IS,CS herring"
-45,IS herring
-46,"NS,CS,nBB hake"
-47,"NS,CS,nBB hake"
-48,"NS,CS,nBB hake"
-49,"CaS,AI hake"
-50,NA horse mackerel
-51,NA horse mackerel
-52,"sBB,AI megrim"
-53,"sBB,AI megrim"
-54,NA mackerel
-55,NA mackerel
-56,NA mackerel
-57,"CaS,AI megrim"
-58,"CaS,AI white anglerfish"
-59,"CaS,AI white anglerfish"
-60,"CaS,AI sardine"
-61,"NS,S plaice"
-62,"NS,S plaice"
-63,IS plaice
-64,eEC plaice
-65,wEC plaice
-66,"NS,R,WS,S,K saithe"
-67,"NS,R,WS,S,K saithe"
-68,"NS,R,WS,S,K saithe"
-69,FG saithe
-70,FG saithe
-71,"S,K,NS northern shrimp"
-72,"S,K,NS northern shrimp"
-73,"S,K,wBS sole"
-74,"S,K,wBS sole"
-75,"S,K,wBS sole"
-76,NS sole
-77,IS sole
-78,eEC sole
-79,eEC sole
-80,eEC sole
-81,wEC sole
-82,"BC,CS sole"
-83,"BC,CS sole"
-84,BB sole
-85,BS sprat
-86,BS sprat
-87,NS sprat
-88,NA blue whiting
-89,NA blue whiting
-90,"NS,eEC whiting"
-91,"CS,eEC whiting"
-92,"CS,eEC whiting"
+1,"Black-bellied anglerfish in CaS,AI "
+2,"Blue ling in CS,EC,FG"
+3,"Seabass in NS,IS,EC,BC,CS"
+4,"Seabass in NS,IS,EC,BC,CS"
+5,"Seabass in NS,IS,EC,BC,CS"
+6,Cod in wBS
+7,Cod in wBS
+8,Cod in wBS
+9,Cod in wBS
+10,Cod eBS
+11,"Cod in NS,eEC,S"
+12,"Cod in NS,eEC,S"
+13,Cod in FP
+14,Cod in WS
+15,Cod in WS
+16,Cod in IS
+17,Cod in IS
+18,Cod in IS
+19,"Cod in eEC,CS"
+20,"Cod in eEC,CS"
+21,Spurdog in NA
+22,Spurdog in NA
+23,"Haddock in NS,WS,S"
+25,Haddock in FG
+26,Haddock in R
+27,Haddock in R
+28,Haddock in R
+29,Haddock in IS
+30,Haddock in IS
+31,"Haddock in CS,EC"
+32,"Haddock in CS,EC"
+33,"Herring in NA,AO"
+34,"Herring in S,K,wBS"
+35,"Herring in S,K,wBS"
+36,Herring in cBS
+37,Herring in cBS
+38,Herring in GR
+39,Herring in GB
+40,Herring in GB
+41,"Herring in NS,S,K,eEC"
+42,"Herring in NS,S,K,eEC"
+43,"Herring in WS,WI"
+44,"Herring in IS,CS"
+45,"Herring in IS,CS"
+46,Herring in IS
+47,"Hake in NS,CS,nBB"
+48,"Hake in NS,CS,nBB"
+49,"Hake in NS,CS,nBB"
+50,"Hake in CaS,AI"
+51,Horse mackerel in NA
+52,Horse mackerel in NA
+53,"Megrim in sBB,AI"
+54,"Megrim in sBB,AI"
+55,Mackerel in NA
+56,Mackerel in NA
+57,Mackerel in NA
+58,"Megrim in CaS,AI"
+59,"White anglerfish in CaS,AI"
+60,"White anglerfish in CaS,AI"
+61,"Sardine in CaS,AI"
+62,"Plaice in NS,S"
+63,"Plaice in NS,S"
+64,Plaice in IS
+65,Plaice in eEC
+66,Plaice in wEC
+67,"Saithe in NS,R,WS,S,K"
+68,"Saithe in NS,R,WS,S,K"
+69,"Saithe in NS,R,WS,S,K"
+70,Saithe in FG
+71,Saithe in FG
+72,"Northern shrimp in S,K,NS"
+73,"Northern shrimp in S,K,NS"
+74,"Sole in S,K,wBS"
+75,"Sole in S,K,wBS"
+76,"Sole in S,K,wBS"
+77,Sole in NS
+78,Sole in IS
+79,Sole in eEC
+80,Sole in eEC
+81,Sole in eEC
+82,Sole in wEC
+83,"Sole in BC,CS"
+84,"Sole in BC,CS"
+85,Sole in BB
+86,Sprat in BS
+87,Sprat in BS
+88,Sprat in NS
+89,Blue whiting in NA
+90,Blue whiting in NA
+91,"Whiting in NS,eEC"
+92,"Whiting in CS,eEC"
+93,"Whiting in CS,eEC"

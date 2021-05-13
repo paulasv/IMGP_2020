@@ -36,7 +36,7 @@ dataf <- data.frame(inner_join(dataf, dos))
 
 
 ### Frequency of occurence
-dataf%>%
+frec <- dataf%>%
   filter(Redondeo != 1,
          Revision_RP_torelative !=1,
          RP_relativetotimeseries!=1)%>%
@@ -46,7 +46,6 @@ dataf%>%
   group_by(revision)%>%
   summarize(n = n(), per = n()/78) %>%
   arrange(desc(n))
-
 
 
 ### Density plots by covariate
@@ -95,25 +94,30 @@ data <- dataf %>%
             refx = mean(current))%>%
   filter(Former_FMSYdefinition_ != 0 )%>%
   ungroup()%>%
-  mutate(refy = rank(refy))%>%
-  mutate(refx = rank(refx))
+  mutate(refy = c(11,-1.5,-1.5,0,0,1.5,5,6,4,3,8.5,8.5,7.5))%>%
+  mutate(refx = c(10,11,1.5,11,8.5,11,11,11,7.5,11,11,-1.5,11))
 
+
+  
+  #mutate(refy = rank(refy))%>%
+  #mutate(refx = rank(refx))  
 labsy = c( expression(F[MSY]), expression(F[provisional]),expression(F[provisional]), expression(F[analogy]), expression(F[analogy]), expression(F[PA]), expression(F[SPR35]),expression(F[SPR30]), expression(F[SPR40]), expression(F[SPR50]), expression(F[0.1]), expression(F[0.1]), expression(F[max]))
 labsx = c(expression(F[0.05]), expression(F[MSY]), expression(F[PA]), expression(F[MSY]), expression(F[0.1]), expression(F[MSY]), expression(F[MSY]), expression(F[MSY]),expression(F[max]), expression(F[MSY]),expression(F[MSY]),expression(F[provisional]),expression(F[MSY]))
 
-data%>%
+con <- data%>%
   ggplot(aes(x =1 , xend = 2, y = refy, yend = refx, colour = meand, size =n),show.legend = T)+
   geom_segment()+
   geom_point(aes(x =1 , y = refy), size = 12, colour = "papayawhip", alpha = .7)+
   geom_point(aes(x = 2, y = refx), size = 12, colour = "papayawhip", alpha = .7)+
   scale_colour_gradient2(low = "#009E73", midpoint = 1,mid =  "lemonchiffon1",  high = "#E69F00" ,limits = c(0, 2) ,  na.value = "#E69F00" )+
-  geom_text(label=labsy, x= rep(1, NROW(data)), colour = "black",  check_overlap = T, nudge_x =-2, size=2.5)+
-  geom_text(label=labsx, y = data$refx, x=rep(2, NROW(data)), check_overlap = T,colour = "black", nudge_x =1, size=2.5)+
-  scale_size(breaks = c(1, 2,4,8))+
+  geom_text(label=labsy, x= rep(1, NROW(data)), colour = "black",  check_overlap = T, nudge_x =-2, size=3)+
+  geom_text(label=labsx, y = data$refx, x=rep(2, NROW(data)), check_overlap = T,colour = "black", nudge_x =1, size=3)+
+  scale_size(breaks = c(1, 2,4,8))+ theme_minimal()+
   theme( panel.grid = element_blank(), strip.background.x = element_rect(fill = "white"),axis.text.y=element_blank())+
   scale_x_continuous(limits=c(0.7,2.2), breaks = c(1,2), labels = c("Previous reference point", "Subsequent reference point"), position = "top")+
   labs( x = "", y = "", colour = expression(paste("Mean ", delta)), size = "n")
 
+ggsave(con, filename = "SI9.png", units = "cm", width = 22, height = 15, dpi = 800)
 
 ## Plotting probabilities of co-occurrence of revisions relative to F 
 ##### Ghassen
@@ -141,7 +145,7 @@ names(data3) <- names(data2)
 data3$revision_type <- names(data2)
 data3_melt <- melt(data3, id.vars = "revision_type")
 
-F_rev <- ggplot(data3_melt, aes(x=factor(revision_type, level=names(data)) , y=variable, fill = value)) +
+F_rev <- ggplot(data3_melt, aes(y=factor(revision_type, level=as.character(rev(frec$revision))) , x=factor(variable, level=as.character(frec$revision)), fill = value)) +
   geom_raster() + 
   scale_fill_viridis_c(name = "Probability of \nco-occurence", option = "D") +
   labs(x="A", y="B") +

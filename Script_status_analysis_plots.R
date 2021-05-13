@@ -15,8 +15,6 @@ library(tidytext)
 library(stringr)
 library(ggpubr)
 
-
-
 # # # # # # # # Databases cleaning and filtering # # # # # # # # # # # 
 
 # Nephrops stocks
@@ -81,6 +79,7 @@ data_change <- data_F %>%
   mutate(newname.x =droplevels(newname.x))%>%
   group_by(newname.x, AssessmentYear.x)%>% 
   filter(Year>(max(Year)-5)) %>%
+  mutate(reldiff = (FFMSY.x-FFMSY.y)/FFMSY.y)%>%
   summarize(n_c = n(), 
             mean.pos_c = mean(FFMSY.x, na.rm = TRUE),
             mean.pre_c = mean(FFMSY.y, na.rm = TRUE),
@@ -129,6 +128,7 @@ data_change <- data_B %>%
   mutate(newname.x =droplevels(newname.x))%>%
   group_by(newname.x, AssessmentYear.x)%>% 
   filter(Year>(max(Year)-5)) %>%
+  mutate(reldiff = (BBMSY.x-BBMSY.y)/BBMSY.y)%>%
   summarise(n_b_c = n(), 
             mean.pos_b_c = mean(BBMSY.x, na.rm = TRUE),
             mean.pre_b_c = mean(BBMSY.y, na.rm = TRUE),
@@ -165,30 +165,31 @@ tmpB <- data_change%>%
   mutate(change = change_b)%>%
   select( AssessmentYear.x, newname.x,  change, Abbreviated.name)%>%
   filter(!is.na(change))%>%
-  
   mutate(type = "MSYBtrigger")
 
 dataT <- rbind(tmpF, tmpB)
 
 titles <- c('FMSY'="F[MSY]", 'MSYBtrigger'="MSY*B[trigger]")
 theme_set(theme_classic())
+
 dataT %>%
   # mutate(newname.x = fct_reorder(newname.x, reldiff, max, .desc = FALSE)) %>%
   mutate(newname.x = fct_relevel(newname.x, rev)) %>%
-  mutate(la = paste(Abbreviated.name, newname.x, sep = "-"))%>%
+  mutate(la = Abbreviated.name)%>%
   mutate(la = fct_relevel(la, rev)) %>%
   ggplot(aes(x = AssessmentYear.x, y = la, fill = change))+
   geom_tile()+
   scale_fill_gradient2(low = "#009E73", midpoint = 0,mid =  "white",  high = "#E69F00" ,limits = c(-1.3, 1.3) ,  na.value = "#E69F00" )+
   labs(x ="Assessment Year", y = "")+
   scale_x_continuous(breaks = c(2012,2013, 2014, 2015, 2016, 2017, 2018, 2019))+
-  geom_text(aes(label = paste(c(round(change, 2))*100, "%")), size = 2)+
+  geom_text(aes(label = paste(c(round(change, 2))*100, "%")), size = 2.5)+
   theme(legend.position = "", panel.grid.major.y = element_line(colour = "lightgrey", linetype = 3, size = .3))+
   facet_wrap(vars(type), labeller = labeller(type = as_labeller(titles, label_parsed)))
 
   
 
-# Timelines of changes in status (Extended materia Fig. 1, 2)
+# Timelines of changes in status (Extended materia Fig. SI1, SI2)
+
 data_F %>%
   filter(!is.na(FMSY.x), !is.na(FMSY.y))%>%
   filter(change.x ==TRUE)%>%
@@ -216,9 +217,9 @@ data_B %>%
   mutate(newname.x =droplevels(newname.x))%>%
   group_by(newname.x, AssessmentYear.x)%>%
   mutate(event = paste(newname.x, AssessmentYear.x))%>%
-  filter(!event %in% redondeo)%>%
-  filter(!event %in% rts)%>%
-  filter(!event %in% relatives)%>%
+  filter(!event %in% redondeo.b)%>%
+  filter(!event %in% rts.b)%>%
+  filter(!event %in% relatives.b)%>%
   mutate(reldiff = (BBMSY.x-BBMSY.y)/BBMSY.y)%>%
   ggplot(aes(Year,reldiff))+
   geom_line(aes(colour = factor(AssessmentYear.x)))+
@@ -230,22 +231,70 @@ data_B %>%
   labs(x="",y = expression("Changes in SSB/MSYB"[trigger]), colour = "Assessment\nYear" )
 
 
-# Example timelines of changes in status (Fig. 2)
+# Timelines of status  (Figure SI3, SI4)
+data_F %>%
+  filter(!is.na(FMSY.x), !is.na(FMSY.y))%>%
+  filter(change.x ==TRUE)%>%
+  filter(!newname.x %in% nephrops)%>%
+  mutate(newname.x =droplevels(newname.x))%>%
+  group_by(newname.x, AssessmentYear.x)%>%
+  mutate(event = paste(newname.x, AssessmentYear.x))%>%
+  filter(!event %in% redondeo)%>%
+  filter(!event %in% rts)%>%
+  filter(!event %in% mixed)%>%
+  mutate(reldiff = (FFMSY.x-FFMSY.y)/FFMSY.y)%>%
+  ggplot(aes(Year,FFMSY.x))+
+  geom_line(aes(colour = factor(AssessmentYear.x)))+
+  geom_line(aes(Year, FFMSY.y, colour = factor(AssessmentYear.y)))+
+  geom_hline(yintercept = 1, linetype = 2, colour = "lightgrey")+
+  facet_wrap(vars(newname.x))+
+  scale_color_viridis_d()+
+  theme_classic()+
+  labs(x="",y = expression("F/F"[MSY]), colour = "Assessment\nYear" )
+
+data_B %>%
+  filter(!is.na(MSYBtrigger.x), !is.na(MSYBtrigger.y))%>%
+  filter(change.x ==TRUE)%>%
+  filter(!newname.x %in% nephrops)%>%
+  mutate(newname.x =droplevels(newname.x))%>%
+  group_by(newname.x, AssessmentYear.x)%>%
+  mutate(event = paste(newname.x, AssessmentYear.x))%>%
+  filter(!event %in% redondeo.b)%>%
+  filter(!event %in% rts.b)%>%
+  filter(!event %in% relatives.b)%>%
+  mutate(reldiff = (BBMSY.x-BBMSY.y)/BBMSY.y)%>%
+  ggplot(aes(Year,BBMSY.x))+
+  geom_line(aes(colour = factor(AssessmentYear.x)))+
+  geom_line(aes(Year, BBMSY.y, colour = factor(AssessmentYear.y)))+
+  geom_hline(yintercept = 1, linetype = 2, colour = "lightgrey")+
+  facet_wrap(vars(newname.x))+
+  scale_color_viridis_d()+
+  theme_classic()+
+  labs(x="",y = expression("SSB/MSYB"[trigger]), colour = "Assessment\nYear" )
+
+
+# Example timelines of changes in status (Fig. 3)
 
 stcks <- c("pil.27.8c9a", "cod.27.6a", "sol.27.20-24")
 
 stock_labs <-c("pil.27.8c9a" = "Cantabrian Sea and Atlantic\nIberian waters sardine", "cod.27.6a" = "West of Scotland cod", "sol.27.20-24" = "Skagerrak and Kattegat\n western Baltic Sea sole")
-e1 <- dataF %>%
-  filter(change.x==TRUE)%>%
+e1 <- data_F %>%
+  filter(change.x == TRUE)%>%
   filter(newname.x %in% stcks)%>%
-  ggplot(aes(Year,reldiff))+
+  group_by(newname.x, AssessmentYear.x)%>%
+  mutate(event = paste(newname.x, AssessmentYear.x))%>%
+  filter(!event %in% redondeo)%>%
+  filter(!event %in% rts)%>%
+  filter(!event %in% mixed)%>%
+  mutate(reldiff = (FFMSY.x-FFMSY.y)/FFMSY.y)%>%
+  ggplot(aes(Year,FFMSY.x))+
   geom_line(aes(colour = factor(AssessmentYear.x)))+
-  geom_hline(yintercept = 0, linetype = 2, colour = "lightgrey")+
+  geom_line(aes(Year, FFMSY.y, colour = factor(AssessmentYear.y)))+
+  geom_hline(yintercept = 1, linetype = 2, colour = "lightgrey")+
   facet_wrap(vars(newname.x), labeller = as_labeller(stock_labs))+
   scale_color_viridis_d()+
-  scale_y_continuous(labels = scales::percent)+
   theme_classic()+
-  labs(x="",y = expression("Changes in F/F"[MSY]), colour = "Assessment\nYear (y)" )
+  labs(x="",y = expression("F/F"[MSY]), colour = "Assessment\nYear (y)" )
 
 
 
@@ -253,28 +302,34 @@ stcks <- c("hke.27.3a46-8abd", "her.27.irls","had.27.6b")
 
 stock_labs <- c("hke.27.3a46-8abd" = "Greater North Sea, Celtic Seas,\nand the northern Bay of Biscay hake", "her.27.irls" = "Irish Sea, Celtic Sea, and\nsouthwest of Ireland herring","had.27.6b" = "Rockhall Haddock" )
 
-e2 <- dataB %>%
+e2 <- data_B %>%
   filter(change.x==TRUE)%>%
   filter(newname.x %in% stcks)%>%
+  group_by(newname.x, AssessmentYear.x)%>%
+  mutate(event = paste(newname.x, AssessmentYear.x))%>%
+  filter(!event %in% redondeo.b)%>%
+  filter(!event %in% rts.b)%>%
+  filter(!event %in% relatives.b)%>%
+  mutate(reldiff = (BBMSY.x-BBMSY.y)/BBMSY.y)%>%
+  ungroup()%>%
   mutate(newname.x = fct_relevel(newname.x, rev))%>%
-  ggplot(aes(Year,reldiff))+
+  ggplot(aes(Year,BBMSY.x))+
   geom_line(aes(colour = factor(AssessmentYear.x)))+
-  geom_hline(yintercept = 0, linetype = 2, colour = "lightgrey")+ 
-  
+  geom_line(aes(Year, BBMSY.y, colour = factor(AssessmentYear.y)))+
+  geom_hline(yintercept = 1, linetype = 2, colour = "lightgrey")+ 
   facet_wrap(vars(newname.x),  labeller = as_labeller(stock_labs))+
   scale_color_viridis_d()+
-  scale_y_continuous(labels = scales::percent)+
   theme_classic()+
-  labs(x="",y = expression("Changes in SSB/MSYB"[trigger]), colour = "Assessment\nYear" )
+  labs(x="",y = expression("SSB/MSYB"[trigger]), colour = "Assessment\nYear" )
 
 ggarrange(e1,e2, nrow = 2,common.legend = TRUE, legend = "right")    
 
 
-# Mean status before and after at changes in reference points and difference distribution (Fig. 3)
+# Mean status before and after at changes in reference points and difference distribution (Fig. 4)
 
-data_m <-data.frame (rbind(cbind(mstatus.y = data_change$mean.pre, mstatus.x = data_change$mean.pos, def = rep("a2. Change in long-term average\nrelative fishing mortality", nrow(data_change))),
+data_m <-data.frame (rbind(cbind(mstatus.y = data_change$mean.pre, mstatus.x = data_change$mean.pos, def = rep("a2. Change in complete time-series\naverage relative fishing mortality", nrow(data_change))),
 cbind(mstatus.y = data_change$mean.pre_c, mstatus.x = data_change$mean.pos_c, def = rep("a1. Change in recent average\nrelative fishing mortality", nrow(data_change))),
-cbind(mstatus.y = data_change$mean.pre_b, mstatus.x = data_change$mean.pos_b, def = rep("b2. Change in long-term average\nrelative biomass", nrow(data_change))),
+cbind(mstatus.y = data_change$mean.pre_b, mstatus.x = data_change$mean.pos_b, def = rep("b2. Change in complete time-series\naverage relative biomass", nrow(data_change))),
 cbind(mstatus.y = data_change$mean.pre_b_c, mstatus.x = data_change$mean.pos_b_c, def = rep("b1. Change in recent average\nrelative biomass", nrow(data_change))))
 )
 data_m$mstatus.y<-as.numeric(as.character(data_m$mstatus.y))
@@ -298,7 +353,7 @@ p1 <- data_m%>%
   geom_point(aes (1.5, median.x), alpha = .3, color = "black")+
   geom_segment(aes(y = median.y, yend = median.x), color = "black", linetype = 2, size = .35)+
   geom_hline(yintercept = 1, linetype = 3, colour = "grey")+
-  scale_y_continuous(breaks = c(1,3,5,7,9))+
+  scale_y_log10()+
   labs(y ="Average status", x = "")+
   scale_x_continuous(limits=c(0,2), breaks = c(.5,1.5), labels = c("Before", "After"), position = "bottom")+
   facet_wrap(vars(def), nrow = 1, strip.position = "top")+
@@ -310,12 +365,13 @@ ggplot(aes(d))+
   geom_histogram( breaks = c(-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8), position = "identity", fill = "grey")+
   theme_light()+
   scale_x_continuous(breaks = c(-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8))+
-  geom_vline(aes(xintercept = median), datap, colour = "black", linetype = 2)+
+  geom_vline(aes(xintercept = median), colour = "black", linetype = 2)+
   theme(panel.grid = element_blank(), strip.background.x = element_rect(fill = "white"))+
   labs(x = "Difference (after-before)", y = "Frequency")+
   facet_wrap(vars(def), nrow = 1) 
 
-ggarrange(p1, p2,  nrow = 2, heights = c(2,1.25))  
+ggarrange(p1, p2,  nrow = 2, heights = c(2.25,1))  
+
 
 ## pairwise t-test
 
@@ -342,7 +398,7 @@ pairwise.t.test(datamm4$value, datamm4$status, p.adj = "none")
 
 
 
-# Change in sustainability status decomposition (Fig. 4)
+# Change in sustainability status decomposition (Fig. 5)
 
 
 ## Filtering
@@ -350,110 +406,112 @@ trans <- c("sol.27.7d 2019" , "ple.27.7d 2015" , "her.27.6a7bc 2017", "ple.27.7e
 
 datap<- data_change%>%  
   mutate(lab = labels$Ind)%>%
-  filter(!event %in% mix)%>%
+  filter(!event %in% mixed)%>%
   filter(!event %in% trans)
 
-  
-### Fishing mortality
-## Background colour
-df <- expand.grid(gamma = seq(0.01, 1.8, length = 300),
-                  delta = seq(0.01, 1.8, length =300))
-df$y <- with(df, gamma/delta - 1)
+##### only points plot
 
-t1 <- ggplot() +
-  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
-  geom_point(data = datap, aes( x = delta, y = gamma), size = .5)+
-  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
-  geom_text(data = datap, aes(x = delta, y = gamma, label = lab), check_overlap = TRUE, vjust = -.5,  size = 2.5)+
-  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
-  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
-  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
-  scale_color_manual(values = c("black", "gray41"))+
-  theme(legend.position = "")+
-  labs(x = expression(paste(delta, " -Proportional change in F"[MSY])), y = expression(paste(gamma, " -Proportional change in average F")), fill = "Proportional\nchange in\nstatus", title = "a2")
-
-cor.test(datap$delta, datap$gamma,method = "pearson")
-
-c1 <- ggplot() +
-  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
-  geom_point(data = datap, aes( x = delta_c, y = gamma_c), size = .5)+
-  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
-  geom_text(data = datap, aes(x = delta_c, y = gamma_c, label = lab), check_overlap = TRUE, vjust = -.5,  size = 2.5)+
-  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
-  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
-  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
-  scale_color_manual(values = c("black", "gray41"))+
-  theme(legend.position = "")+
-  labs(x = expression(paste(delta, " -Proportional change in F"[MSY])), y = expression(paste(gamma, " -Proportional change in average F")), fill = "Proportional\nchange in\nstatus", title = "a2")
-
-cor.test(datap$delta_c, datap$gamma_c,method = "pearson")
+expected <- data.frame (d = seq(0.2, 2.5, by  = 0.01), g =1/seq(0.2, 2.5, by  = 0.01)-1)
 
 
-### Biomass
-## Background colour
-df <- expand.grid(gamma = seq(0.01, 2.5, length = 300),
-                  delta = seq(0.01, 2.5, length =300))
-df$y <- with(df, gamma/delta - 1)
-
-t2 <- ggplot() +
-  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
-  geom_point(data = datap, aes( x = delta_b, y = gamma_b), size = .5)+
-  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
-  geom_text(data = datap, aes(x = delta_b, y = gamma_b, label = lab), check_overlap = TRUE, vjust = -.5,  size = 2.5)+
-  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
-  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
-  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
-  scale_color_manual(values = c("black", "gray41"))+
-  theme(legend.position = "")+
-  labs(x = expression(paste(delta, " -Proportional change in MSYB"[trigger])), y = expression(paste(gamma, " -Proportional change in average SSB")), fill = "Proportional\nchange in\nstatus", title = "b2")
-
-cor.test(datap$delta_b, datap$gamma_b,method = "pearson")
-
-c2 <- ggplot() +
-  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
-  geom_point(data = datap, aes( x = delta_b_c, y = gamma_b_c), size = .5)+
-  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
-  geom_text(data = datap, aes(x = delta_b_c, y = gamma_b_c, label = lab), check_overlap = TRUE, vjust = -.5,  size = 2.5)+
-  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
-  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
-  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
-  scale_color_manual(values = c("black", "gray41"))+
-  theme(legend.position = "")+
-  labs(x = expression(paste(delta, " -Proportional change in MSYB"[trigger])), y = expression(paste(gamma, " -Proportional change in average SSB")), fill = "Proportional\nchange in\nstatus", title = "b1")
-
-cor.test(datap$delta_b_c, datap$gamma_b_c,method = "pearson")
-
-ggarrange(c1, t1, c2, t2,  ncol = 2, nrow = 2, common.legend = TRUE, legend = "right")
-
-
-
-# Marginal relationship between average proportional change in status and proportional change in reference point (Fig. 5)
-
-efe <- datap %>%
-ggplot(aes(delta, y)) +
+efe <- ggplot(data = datap, aes(delta, log1p(y))) +
   geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
   geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
-  geom_smooth(method = "loess",linetype = 1, color = "darkgrey")+
+  geom_line(data = expected, aes(d, log1p(g)), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
   geom_point(size = 0.5)+
   scale_colour_viridis_d()+
   scale_y_continuous(labels = scales::percent)+
-  geom_text(aes(label = lab), color = "black", vjust = -1, hjust = .5, check_overlap = TRUE, alpha = 0.9, size = 2.5)+
-  labs(title = "a", y = expression("Change in F/F"[MSY]), x =expression(paste(delta, " -Proportional change in F"[MSY])), colour ="Assessment\nYear")+
+  labs( y = expression("Change in F/F"[MSY]), x =expression(paste(delta, " -Proportional change in F"[MSY])), colour ="Assessment\nYear")+
+  theme(panel.grid = element_blank())
+
+
+ebe <- ggplot(data = datap, aes(delta_b, y_b)) +
+  geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
+  geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
+  geom_line(data = expected, aes(d, g), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
+  geom_point(size = 0.5)+
+  scale_colour_viridis_d()+
+  scale_y_continuous(labels = scales::percent)+
+  labs( y = expression("Change in SSB/MSYB"[trigger]), x =expression(paste(delta, " -Proportional change in MSYB"[trigger])), colour ="Assessment\nYear")+
+  theme(panel.grid = element_blank())
+
+
+expected <- data.frame (ga = seq(0.5, 1.65, by  = 0.01), de = seq(0.5, 1.65, by  = 0.01)/1-1)
+
+efeg <- ggplot(data = datap, aes(gamma, y)) +
+  geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
+  geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
+  geom_line(data = expected, aes(ga, de), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
+  geom_point(size = 0.5)+
+  scale_colour_viridis_d()+
+  scale_y_continuous(labels = scales::percent)+
+  labs(y = expression("Change in F/F"[MSY]), x =expression(paste(gamma, " -Proportional change in F")), colour ="Assessment\nYear")+
+  theme(panel.grid = element_blank())
+
+ebeg <- ggplot(data = datap, aes(gamma_b, y_b)) +
+  geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
+  geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
+  geom_line(data =  expected, aes(ga, de), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
+  geom_point(size = 0.5)+
+  scale_colour_viridis_d()+
+  scale_y_continuous(labels = scales::percent)+
+  labs(y = expression("Change in SSB/MSYB"[trigger]), x =expression(paste(gamma, " -Proportional change in SSB")), colour ="Assessment\nYear")+
+  theme(panel.grid = element_blank())
+
+ggarrange(efe, ebe, efeg, ebeg, nrow = 2, ncol = 2, common.legend = TRUE, legend = "right")
+
+
+# Marginal relationship between average proportional change in status and proportional change in reference point for 5 recent years (SI figure 5) 
+expected <- data.frame (d = seq(0.2, 2.5, by  = 0.01), g =1/seq(0.2, 2.5, by  = 0.01)-1)
+
+efe <- datap %>%
+  ggplot(aes(delta_c, y_c)) +
+  geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
+  geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
+  geom_line(data = expected, aes(d, g), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
+  geom_point(size = 0.5)+
+  scale_colour_viridis_d()+
+  scale_y_continuous(labels = scales::percent)+
+  labs( y = expression("Change in F/F"[MSY]), x =expression(paste(delta, " -Proportional change in F"[MSY])), colour ="Assessment\nYear")+
   theme(panel.grid = element_blank())
 
 
 ebe <- datap %>%
-  ggplot(aes(delta_b, y_b)) +
+  ggplot(aes(delta_b_c, y_b_c)) +
   geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
   geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
-  geom_smooth(method = "loess",linetype = 1, color = "darkgrey")+
+  geom_line(data = expected, aes(d, g), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
   geom_point(size = 0.5)+
   scale_colour_viridis_d()+
   scale_y_continuous(labels = scales::percent)+
-  geom_text(aes(label = lab), color = "black", vjust = -1, hjust = .5, check_overlap = TRUE, alpha = 0.9, size = 2.5)+
-  labs(title = "a", y = expression("Change in SSB/MSYB"[trigger]), x =expression(paste(delta, " -Proportional change in MSYB"[trigger])), colour ="Assessment\nYear")+
+  labs( y = expression("Change in SSB/MSYB"[trigger]), x =expression(paste(delta, " -Proportional change in MSYB"[trigger])), colour ="Assessment\nYear")+
   theme(panel.grid = element_blank())
 
-ggarrange(efe, ebe, nrow = 1, common.legend = TRUE, legend = "right")
+
+expected <- data.frame (ga = seq(0.5, 1.65, by  = 0.01), de = seq(0.5, 1.65, by  = 0.01)/1-1)
+
+efeg <- datap %>%
+  ggplot(aes(gamma_c, y_c)) +
+  geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
+  geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
+  geom_line(data = expected, aes(ga, de), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
+  geom_point(size = 0.5)+
+  scale_colour_viridis_d()+
+  scale_y_continuous(labels = scales::percent)+
+  labs(y = expression("Change in F/F"[MSY]), x =expression(paste(gamma, " -Proportional change in F")), colour ="Assessment\nYear")+
+  theme(panel.grid = element_blank())
+
+ebeg <- datap %>%
+  ggplot(aes(gamma_b_c, y_b_c)) +
+  geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
+  geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
+  geom_line(data =  expected, aes(ga, de), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
+  geom_point(size = 0.5)+
+  scale_colour_viridis_d()+
+  scale_y_continuous(labels = scales::percent)+
+  labs(y = expression("Change in SSB/MSYB"[trigger]), x =expression(paste(gamma, " -Proportional change in SSB")), colour ="Assessment\nYear")+
+  theme(panel.grid = element_blank())
+
+ggarrange(efe, ebe, efeg, ebeg, nrow = 2, ncol = 2, common.legend = TRUE, legend = "right")
 
 
