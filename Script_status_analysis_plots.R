@@ -30,7 +30,7 @@ rts <- c("ple.27.7d 2014" ,  "ple.27.7e 2018"  , "ple.27.7e 2019"  , "ple.27.7h-
 mixed <- c("ank.27.8c9a 2012", "pra.27.3a4a 2015", "ple.27.7d 2015", "sol.27.7d 2019" , "ple.27.7e 2015" , "her.27.6a7bc 2017")
 ## Substitutions
 data_F[data_F$newname.x == "sol.27.7d" & data_F$AssessmentYear.x == 2019, 4] <- 0.192 
-data_F[data_F$newname.x == "ple.27.7e" & data_F$AssessmentYear.x == 2015, 21] <- 0.15
+data_F[data_F$newname.x == "ple.27.7d" & data_F$AssessmentYear.x == 2015, 21] <- 0.15
 data_F[data_F$newname.x == "her.27.6a7bc" & data_F$AssessmentYear.x == 2017, 21] <- 0.25 
 
 
