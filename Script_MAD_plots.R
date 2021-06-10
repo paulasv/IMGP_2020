@@ -169,8 +169,7 @@ tmp <- data_change %>%
   filter(change == TRUE)# rp change
 mad(tmp$mean.pos-tmp$mean.pre, tmp$change)
 tmp <- data_change %>%
-  filter(!is.na(change))%>%
-  filter(change == FALSE)# rp no change
+  filter(!is.na(change))
 mad(tmp$mean.pos-tmp$mean.pre, tmp$change)
 # recentent 5 years F
 tmp <- data_change %>%
@@ -178,8 +177,7 @@ tmp <- data_change %>%
   filter(change == TRUE)# rp change
 mad(tmp$mean.pos_c-tmp$mean.pre_c, tmp$change_c)
 tmp <- data_change %>%
-  filter(!is.na(change_c))%>%
-  filter(change == FALSE)# rp no change
+  filter(!is.na(change_c))
 mad(tmp$mean.pos_c-tmp$mean.pre_c, tmp$change_c)
 # complete timeseries B
 tmp <- data_change %>%
@@ -187,8 +185,7 @@ tmp <- data_change %>%
   filter(change == TRUE)# rp change
 mad(tmp$mean.pos_b-tmp$mean.pre_b, tmp$change_b)
 tmp <- data_change %>%
-  filter(!is.na(change_b))%>%
-  filter(change == FALSE)# rp no change
+  filter(!is.na(change_b))
 mad(tmp$mean.pos_b-tmp$mean.pre_b, tmp$change_b)
 # recentent 5 years B
 tmp <- data_change %>%
@@ -196,9 +193,9 @@ tmp <- data_change %>%
   filter(change == TRUE)# rp change
 mad(tmp$mean.pos_b_c-tmp$mean.pre_b_c, tmp$change_b_c)
 tmp <- data_change %>%
-  filter(!is.na(change_b_c))%>%
-  filter(change == FALSE)# rp no change
+  filter(!is.na(change_b_c))
 mad(tmp$mean.pos_b_c-tmp$mean.pre_b_c, tmp$change_b_c)
+
 
 
 # 2. CHECK IF SIMULTANEOUS CHANGES ARE PAIRED OR DEVIATED FROM EXPECTED DIRECTION
@@ -256,7 +253,7 @@ in_in <- data%>%
   droplevels()%>%
   pull(event) 
 
-# Figure 2 
+# Figure Suplementary relation between fmsy and msybtrigger
 data%>%
   filter(!is.na(change) & !is.na(change_b))%>%
   ggplot(aes(change, change_b))+

@@ -396,9 +396,103 @@ pairwise.t.test(datamm2$value, datamm2$status, p.adj = "none")
 pairwise.t.test(datamm3$value, datamm3$status, p.adj = "none")
 pairwise.t.test(datamm4$value, datamm4$status, p.adj = "none")
 
+# Change in sustainability status descomposition(Fig. 4)
+
+### Fishing mortality
+## Background colour
+df <- expand.grid(gamma = seq(0.01, 1.8, length = 300),
+                  delta = seq(0.01, 1.8, length =300))
+df$y <- with(df, gamma/delta - 1)
+
+points <-  c("61", "11", "28", "80", "39", "51", "91", "2", "15", "40")
+
+datapoints <- datap%>%
+  filter(!lab %in% points)
+
+datalabs <- datap%>%
+  filter(lab %in% points)
+
+t1 <- ggplot() +
+  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
+  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
+  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
+  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
+  geom_point(data = datapoints, aes( x = delta, y = gamma), shape = 1, size = 1, alpha = 0.5)+
+  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
+  geom_text(data = datalabs, aes(x = delta, y = gamma, label = lab), check_overlap = FALSE, size = 3.5)+
+  #geom_text_repel(data = datap, aes(x = delta, y = gamma, label = lab), size = 2.5, box.padding = unit(0.06, "lines"))+
+  #geom_label(data = datap, aes(x = delta, y = gamma, label = lab), colour = "black", size = 2.5, cex = .7)+
+  scale_color_manual(values = c("black", "gray41"))+
+  theme(legend.position = "")+
+  scale_y_continuous(breaks = c(0, 1,1.5))+
+  xlim(0,2)+ylim(0,1.5)+
+  labs(x = expression(paste(delta, " -Proportional change in F"[MSY])), y = expression(paste(gamma, " -Proportional change in average F")), fill = "Proportional\nchange in\nstatus", title = "a2")
+
+cor.test(datap$delta, datap$gamma,method = "pearson")
+
+c1 <- ggplot() +
+  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
+  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
+  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
+  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
+  geom_point(data = datapoints, aes( x = delta_c, y = gamma_c), shape = 1, size = 1, alpha = 0.5)+
+  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
+  geom_text(data = datalabs, aes(x = delta_c, y = gamma_c, label = lab), check_overlap = FALSE, size = 3.5)+
+  scale_color_manual(values = c("black", "gray41"))+
+  theme(legend.position = "")+
+  labs(x = expression(paste(delta, " -Proportional change in F"[MSY])), y = expression(paste(gamma, " -Proportional change in average F")), fill = "Proportional\nchange in\nstatus", title = "a1")
+
+cor.test(datap$delta_c, datap$gamma_c,method = "pearson")
 
 
-# Change in sustainability status decomposition (Fig. 5)
+### Biomass
+## Background colour
+df <- expand.grid(gamma = seq(0.01, 2.5, length = 300),
+                  delta = seq(0.01, 2.5, length =300))
+df$y <- with(df, gamma/delta - 1)
+
+points <-  c("61", "11", "28", "80", "63", "39", "51", "91", "2", "15", "40")
+
+datapoints <- datap%>%
+  filter(!lab %in% points)
+
+datalabs <- datap%>%
+  filter(lab %in% points)
+
+t2 <- ggplot() +
+  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
+  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
+  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
+  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
+  geom_point(data = datapoints, aes( x = delta_b, y = gamma_b), shape = 1, size = 1, alpha = 0.5)+
+  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
+  geom_text(data = datalabs, aes(x = delta_b, y = gamma_b, label = lab), check_overlap = TRUE,  size = 3.5)+
+  scale_color_manual(values = c("black", "gray41"))+
+  theme(legend.position = "")+
+  labs(x = expression(paste(delta, " -Proportional change in MSYB"[trigger])), y = expression(paste(gamma, " -Proportional change in average SSB")), fill = "Proportional\nchange in\nstatus", title = "b2")
+
+cor.test(datap$delta_b, datap$gamma_b,method = "pearson")
+
+c2 <- ggplot() +
+  geom_tile(data = df, aes(x = delta, y = gamma, fill = y)) +
+  geom_hline(yintercept = 1, linetype = 3,colour = "gray")+
+  geom_vline(xintercept = 1, linetype = 3,colour = "gray")+
+  geom_abline(intercept = 0, slope = 1, linetype = 3, colour = "gray")+
+  geom_point(data = datapoints, aes( x = delta_b_c, y = gamma_b_c), shape = 1,size = 1, alpha = 0.5)+
+  scale_fill_gradient2(low = "#0072B2",  mid = "white", high = "#D55E00", limits =c(-3.2,3.2), na.value = "#D55E00" ,  labels = scales::percent) +
+  geom_text(data = datalabs, aes(x = delta_b_c, y = gamma_b_c, label = lab), check_overlap = FALSE,  size = 3.5)+
+  scale_color_manual(values = c("black", "gray41"))+
+  theme(legend.position = "")+
+  labs(x = expression(paste(delta, " -Proportional change in MSYB"[trigger])), y = expression(paste(gamma, " -Proportional change in average SSB")), fill = "Proportional\nchange in\nstatus", title = "b1")
+
+cor.test(datap$delta_b_c, datap$gamma_b_c,method = "pearson")
+
+ggarrange(c1, t1, c2, t2,  ncol = 2, nrow = 2, common.legend = TRUE, legend = "right")
+
+
+
+
+# Marginal change in sustainability status decomposition (Fig. 5)
 
 
 ## Filtering
@@ -414,7 +508,7 @@ datap<- data_change%>%
 expected <- data.frame (d = seq(0.2, 2.5, by  = 0.01), g =1/seq(0.2, 2.5, by  = 0.01)-1)
 
 
-efe <- ggplot(data = datap, aes(delta, log1p(y))) +
+efe <- ggplot(data = datap, aes(delta, y)) +
   geom_vline(xintercept = 1, linetype = 3, color = "lightgrey")+
   geom_hline(yintercept = 0, linetype = 3, color = "lightgrey")+
   geom_line(data = expected, aes(d, log1p(g)), linetype = 2, color = "darkgrey", size = 1, alpha = 0.7)+
