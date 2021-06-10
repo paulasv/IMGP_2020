@@ -8,10 +8,12 @@ The scripts for analysis and plots are divided in:
  2. **database_diff.R**: Contains the code to identify changes in reference points and create a database for each reference point changes
 
  3. **Script_status_analysis_plots.R**: Contains code for the status analysis, decomposition, and plots creation.  
+
+ 4. **Script_MAD_plots.R**: Contains code for the median absolute deviation (MAD) analysis and the plot relating changes of simultaneous changes in fishing mortality and biomass reference point.  
   
- 4. **Script_plots_model_FMSY.R**: Code for the model of changes in FMSY and plots. 
+ 5. **Script_plots_model_FMSY.R**: Code for the model of changes in FMSY and plots. 
  
- 5. **Script_plots_model_MSYBtrigger.R**:  Code for the model of changes in MSYBtrigger and plots. 
+ 6. **Script_plots_model_MSYBtrigger.R**:  Code for the model of changes in MSYBtrigger and plots. 
  
 
 The data files are:
