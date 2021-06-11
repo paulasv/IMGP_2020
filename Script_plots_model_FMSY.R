@@ -16,7 +16,6 @@ library(stringr)
 library(ggpubr)
 library(reshape2)
 
-setwd("~/Documents/GMIT/FishKOSM-GMIT/paula/Impacts_of_moving_goal_posts")
 
 data <- read.csv("data_gdy.csv")
 
